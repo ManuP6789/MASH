@@ -3,6 +3,6 @@
 #include "common.h"
 #include "builtin.h"
 
-int init(int argc, char *argv[]);
+int init(int argc, char* argv[]);
 
 #endif
