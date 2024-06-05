@@ -2,6 +2,7 @@
   "files.associations": {
     "*.embeddedhtml": "html",
     "__bit_reference": "c",
-    "bitset": "c"
+    "bitset": "c",
+    "unistd.h": "c"
   }
 }

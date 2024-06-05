@@ -174,3 +174,81 @@ mash_ls(char** args, int* position) {
 
 	free(filenames);
 }
+
+void
+mash_touch(char** args, int* position) {
+	int fd;
+	*position += 1;
+	char* filename = args[*position];
+	if(filename == NULL) {
+		fprintf(stderr, "touch: filename\n");
+		return;
+	}
+
+	// Try to open the file, creating it if it does not exist
+	fd = open(filename, O_WRONLY | O_CREAT, 0666);
+	if(fd == -1) {
+		perror("Error opening/creating file");
+	}
+
+	// Close the file descriptor immediately since we only want to create it if it doesn't exist
+	close(fd);
+
+	// Update the file's access and modification times
+	if(utime(filename, NULL) == -1) {
+		perror("Error updating timestamps");
+	}
+
+}
+
+void
+mash_rm(char** args, int* position) {
+	*position += 1;
+	char* dirpath = args[*position];
+	if(remove(dirpath) != 0) {
+		printf("rm: no such file or directory: %s\n", dirpath);
+	}
+}
+
+void
+mash_mv_usage(void) {
+	fprintf(stderr, "usage: mv source target\n");
+	fprintf(stderr, "       mv source ... directory\n");
+}
+
+void
+mash_mv(char** args, int* position) {
+	*position += 1;
+	char* oldpath = args[*position];
+	if(oldpath == NULL) {
+		mash_mv_usage();
+		return;
+	}
+	*position += 1;
+	char* newpath = args[*position];
+
+	if(newpath == NULL) {
+		mash_mv_usage();
+		return;
+	}
+
+	if(rename(oldpath, newpath) != 0) {
+		printf("mv: rename %s to %s: No such file or directory\n", oldpath, newpath);
+	}
+}
+
+void
+mash_mkdir(char** args, int* position) {
+	*position += 1;
+	char* directory_name = args[*position];
+	if(directory_name == NULL) {
+		fprintf(stderr, "usage: mkdir directory_name ...\n");
+		return;
+	}
+	mode_t mode = 0755; // rwxr-xr-x
+
+	if(mkdir(directory_name, mode) == -1) {
+		perror("Error creating directory");
+		return;
+	}
+}

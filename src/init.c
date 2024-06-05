@@ -1,6 +1,7 @@
 #include "init.h"
 
 #define BUF_SIZE 64
+#define TOK_DELIM " \t\r\n\a\""
 // Function written harishankarv, I really liked it so I decided to use it.
 char*
 mash_readline(void)
@@ -33,7 +34,7 @@ mash_parse(char* cmd_line) {
 	// Duplicate the cmd_line to avoid modifying the original
 	char* cmd_copy = strdup(cmd_line);
 
-	while((token = strsep(&cmd_copy, " \t\r\n\a")) != NULL) {
+	while((token = strsep(&cmd_copy, TOK_DELIM)) != NULL) {
 		if(strlen(token) > 0) {
 			tokens[position] = token;
 			position++;
@@ -82,6 +83,14 @@ mash_exec(char** args) {
 			mash_cd(args, &position);
 		} else if(strcmp(cmd, "ls") == 0) {
 			mash_ls(args, &position);
+		} else if(strcmp(cmd, "mv") == 0) {
+			mash_mv(args, &position);
+		} else if(strcmp(cmd, "rm") == 0) {
+			mash_rm(args, &position);
+		} else if(strcmp(cmd, "touch") == 0) {
+			mash_touch(args, &position);
+		} else if(strcmp(cmd, "mkdir") == 0) {
+			mash_mkdir(args, &position);
 		} else {
 			fprintf(stdout, "MASH: %s: command not found\n", args[position]);
 		}
