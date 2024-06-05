@@ -28,7 +28,9 @@ mash_pwd(void) {
 }
 
 void
-mash_cd(char* dirpath) {
+mash_cd(char** args, int* position) {
+	*position += 1;
+	char* dirpath = args[*position];
 	if(chdir(dirpath) != 0) {
 		printf("cd: no such file or directory: %s\n", dirpath);
 	}
@@ -63,7 +65,7 @@ mash_ls(char** args, int* position) {
 			}
 		}
 	} else {
-		*position = *position + 1;
+		*position += 1;
 		if(strcmp(flags, "-g") == 0) {
 			fprintf(stderr, "I am in -g");
 		} else if(strcmp(flags, "-n") == 0) {

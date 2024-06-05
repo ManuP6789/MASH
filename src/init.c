@@ -79,7 +79,7 @@ mash_exec(char** args) {
 		} else if(strcmp(cmd, "pwd") == 0) {
 			mash_pwd();
 		} else if(strcmp(cmd, "cd") == 0) {
-			mash_cd(args[position + 1]);
+			mash_cd(args, &position);
 		} else if(strcmp(cmd, "ls") == 0) {
 			mash_ls(args, &position);
 		} else {
