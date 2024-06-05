@@ -75,7 +75,6 @@ mash_ls(char** args, int* position) {
 		}
 	}
 
-	fprintf(stderr, "flag1\n");
 	dirp = opendir(dirpath);
 
 	if(dirp == NULL) {
@@ -87,6 +86,8 @@ mash_ls(char** args, int* position) {
 	// Count # of files in given directory
 	while((dp = readdir(dirp)) != NULL) {
 		if(strcmp(dp->d_name, ".") == 0 || strcmp(dp->d_name, "..") == 0) {
+			continue;
+		} else if(dp->d_name[0] == '.') {
 			continue;
 		}
 		int len = strlen(dp->d_name);
@@ -103,7 +104,8 @@ mash_ls(char** args, int* position) {
 	ioctl(STDOUT_FILENO, TIOCGWINSZ, &w);
 	num_cols = w.ts_cols;
 
-	num_cols = num_cols / (max_file_len + 7); // padding of 8 between files
+	num_cols = num_cols / (max_file_len + 6); // padding of 8 between files
+
 	if(num_cols == 0) {
 		num_cols = 1;
 	}
@@ -117,25 +119,47 @@ mash_ls(char** args, int* position) {
 			continue;
 		} else if(dp->d_name[0] == '.') {
 			continue;
+		} else {
+			filenames[i] = strdup(dp->d_name);
+			i++;
 		}
-		filenames[i] = strdup(dp->d_name);
-		i++;
+
 	}
 
 	qsort(filenames, file_count, sizeof(char*), compare_strings);
 
 	int num_rows = (file_count + (num_cols - 1)) / num_cols;
 
-	// Print filenames in grid format
-	for(i = 0; i < file_count; i++) {
-		printf("%-*s ", max_file_len + 6, filenames[(i * num_rows) % file_count]);
-
-		if((i + 1) % num_cols == 0) {
-			printf("\n");
+	// Checks when terminal is too big
+	if(num_rows * num_cols > file_count + num_rows) {
+		num_cols = file_count / num_rows;
+		if((num_cols * num_rows) < file_count) {
+			num_cols++;
 		}
 	}
-	if(file_count % num_cols != 0) {
-		printf("\n");
+
+	int extra_prints = num_rows - ((num_rows * num_cols) - file_count);
+
+	for(int i = 0; i < num_rows; i++) {
+		for(int j = 0; j < num_cols; j++) {
+			char* curr_file = filenames[((j * num_rows) + i) % file_count];
+			int last_col = num_cols - 1;
+
+			if(extra_prints && j == last_col) {
+				printf("%-*s ", max_file_len + 6, curr_file);
+				extra_prints--;
+			} else if(!extra_prints && j == last_col){
+				printf("%-*s ", max_file_len + 6, "");
+			} else {
+				printf("%-*s ", max_file_len + 6, curr_file);
+			}
+
+			// Prints newline, not if reached last row
+			if(((j + 1) % num_cols == 0)) {
+				printf("\n");
+			}
+		}
+
 	}
 
 	if(errno != 0) {
@@ -145,4 +169,6 @@ mash_ls(char** args, int* position) {
 	if(closedir(dirp) == -1) {
 		fprintf(stderr, "closedir");
 	}
+
+	free(filenames);
 }
