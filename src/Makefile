@@ -23,7 +23,7 @@ EXECS   = MASH
 
 all: $(EXECS)
 
-MASH: MASH.o get_num.o init.o builtin.o
+MASH: MASH.o get_num.o init.o builtin.o mash_process.o
 	$(CC) $^ -o $@ $(LIBS)
 
 # tests: tests.o memory.o

@@ -59,24 +59,27 @@ int
 mash_exec(char** args) {
 	int position = 0;
 	char* cmd;
+	char* first_arg = args[0];
 
-	if(args[0] == NULL) {
+	if(first_arg == NULL) {
 		return 0;
-	}
-
-	while(args[position] != NULL) {
+	} else if (first_arg[0] == '.' && first_arg[1] == '/') {
+		size_t len = strlen(first_arg);
+        char* new_arg = (char*)malloc(len - 1); // Allocate memory for the new string
+        if (new_arg == NULL) {
+            fprintf(stderr, "Memory allocation failed\n");
+            return -1;
+        }
+        strcpy(new_arg, first_arg + 2);
+		args[0] = new_arg;
+		start_new_process(args);
+	} else {
+		while(args[position] != NULL) {
 		cmd = args[position];
 		if(strcmp(cmd, "exit") == 0) {
 			return 1;
 		} else if(strcmp(cmd, "echo") == 0) {
-			int no_newline = 0;
-			if(strcmp(args[position + 1], "-n") == 0) {
-				no_newline = 1;
-				mash_echo(args, position + 2, no_newline);
-			} else {
-				mash_echo(args, position, no_newline);
-			}
-			return 0;
+			mash_echo(args, &position);
 		} else if(strcmp(cmd, "pwd") == 0) {
 			mash_pwd();
 		} else if(strcmp(cmd, "cd") == 0) {
@@ -95,6 +98,9 @@ mash_exec(char** args) {
 			fprintf(stdout, "MASH: %s: command not found\n", args[position]);
 		}
 		position++;
+	}
+
+	
 	}
 
 	return 0;

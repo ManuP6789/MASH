@@ -3,7 +3,7 @@
 #include "common.h"
 #include "dirent.h"
 
-void mash_echo(char** cmd, int position, int no_newline);
+void mash_echo(char** args, int* position);
 void mash_pwd(void);
 void mash_cd(char** args, int* position);
 void mash_ls(char** args, int* position);

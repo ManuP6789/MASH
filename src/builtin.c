@@ -3,14 +3,28 @@
 #define PATH_MAX        4096    /* # chars in a path name including nul */
 
 void
-mash_echo(char** cmd, int position, int NO_NEWLINE) {
-	for(int i = position; cmd[i] != NULL; i++) {
-		printf("%s ", cmd[i]);
+mash_echo(char** args, int* position) {
+	bool NO_NEWlINE = 0;
+	*position += 1;
+
+	if (args[*position] == NULL) {
+		printf("\n");
+		return;
 	}
 
-	if(!NO_NEWLINE) {
+	if(strcmp(args[*position], "-n") == 0) {
+		NO_NEWlINE = 1;
+		*position += 1;
+	}
+
+	for(int i = *position; args[i] != NULL; i++) {
+		printf("%s ", args[i]);
+	}
+
+	if(!NO_NEWlINE) {
 		printf("\n");
 	}
+
 }
 
 void
