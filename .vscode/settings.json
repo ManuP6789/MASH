@@ -3,6 +3,7 @@
     "*.embeddedhtml": "html",
     "__bit_reference": "c",
     "bitset": "c",
-    "unistd.h": "c"
+    "unistd.h": "c",
+    "common.h": "c"
   }
 }

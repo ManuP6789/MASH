@@ -73,6 +73,7 @@ mash_exec(char** args) {
         strcpy(new_arg, first_arg + 2);
 		args[0] = new_arg;
 		start_new_process(args);
+		free(new_arg);
 	} else {
 		while(args[position] != NULL) {
 		cmd = args[position];
