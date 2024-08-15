@@ -76,32 +76,30 @@ mash_exec(char** args) {
 		free(new_arg);
 	} else {
 		while(args[position] != NULL) {
-		cmd = args[position];
-		if(strcmp(cmd, "exit") == 0) {
-			return 1;
-		} else if(strcmp(cmd, "echo") == 0) {
-			mash_echo(args, &position);
-		} else if(strcmp(cmd, "pwd") == 0) {
-			mash_pwd();
-		} else if(strcmp(cmd, "cd") == 0) {
-			mash_cd(args, &position);
-		} else if(strcmp(cmd, "ls") == 0) {
-			mash_ls(args, &position);
-		} else if(strcmp(cmd, "mv") == 0) {
-			mash_mv(args, &position);
-		} else if(strcmp(cmd, "rm") == 0) {
-			mash_rm(args, &position);
-		} else if(strcmp(cmd, "touch") == 0) {
-			mash_touch(args, &position);
-		} else if(strcmp(cmd, "mkdir") == 0) {
-			mash_mkdir(args, &position);
-		} else {
-			fprintf(stdout, "MASH: %s: command not found\n", args[position]);
+			cmd = args[position];
+			if(strcmp(cmd, "exit") == 0) {
+				return 1;
+			} else if(strcmp(cmd, "echo") == 0) {
+				mash_echo(args, &position);
+			} else if(strcmp(cmd, "pwd") == 0) {
+				mash_pwd();
+			} else if(strcmp(cmd, "cd") == 0) {
+				mash_cd(args, &position);
+			} else if(strcmp(cmd, "ls") == 0) {
+				mash_ls(args, &position);
+			} else if(strcmp(cmd, "mv") == 0) {
+				mash_mv(args, &position);
+			} else if(strcmp(cmd, "rm") == 0) {
+				mash_rm(args, &position);
+			} else if(strcmp(cmd, "touch") == 0) {
+				mash_touch(args, &position);
+			} else if(strcmp(cmd, "mkdir") == 0) {
+				mash_mkdir(args, &position);
+			} else {
+				fprintf(stdout, "MASH: %s: command not found\n", args[position]);
+			}
+			position++;
 		}
-		position++;
-	}
-
-	
 	}
 
 	return 0;
